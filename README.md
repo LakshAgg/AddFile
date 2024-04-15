@@ -1,6 +1,9 @@
 # AddFile
 Just a simple and stupid program to create source files with some prefilled data.
 
+## Installation
+Just use `make` and `sudo make install`. To uninstall use `sudo make uninstall`.
+
 ## Config
 The configuration can be stored anywhere u like. On running the program for the first time it will ask for the path to the config file.
 
