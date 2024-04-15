@@ -22,6 +22,21 @@ string new_string()
     return rv;
 }
 
+string new_string_from_char(char *s)
+{
+    unsigned long len = strlen(s);
+    string rv = malloc(sizeof(*rv) + 1 + len);
+    if (rv)
+    {
+        rv->alloc = 1 + len;
+        rv->len = len;
+        rv->s = (char *)(rv + 1);
+        strcpy(rv->s, s);
+    }
+
+    return rv;
+}
+
 void empty_s(string s)
 {
     s->len = 0;
@@ -96,5 +111,27 @@ char string_append(string *sp, string s2)
     }
     memcpy(s->s + s->len, s2->s, s2->len + 1);
     s->len += s2->len;
+    return 1;
+}
+
+char string_append_char(string *sp, char *s2)
+{
+    string s = *sp;
+    unsigned long len = strlen(s2);
+
+    if (s->len + len + 1 >= s->alloc)
+    {
+        unsigned long size = s->len + len + 1;
+        size = size > s->alloc * 2 ? size : s->alloc * 2;
+
+        s = realloc(s, sizeof(*s) + (sizeof(char) * size));
+        if (!s)
+            return 0;
+        s->s = (char *)(s + 1);
+        s->alloc = size;
+        *sp = s;
+    }
+    memcpy(s->s + s->len, s2, len + 1);
+    s->len += len;
     return 1;
 }

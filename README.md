@@ -52,6 +52,16 @@ Yay a comment
 # this is a comment
 ```
 
+##### Preassigned Variables
+These can be overwritten either in config or by -v.
+
+| Name    | Value                     |
+| ------- | ------------------------- |
+| NAME    | the name of file          |
+| NAMECAP | the name of file all caps |
+| DDMMYY  | the creation date         |
+| YEAR    | the current year          |
+
 #### File Contents
 Data for each file extension is started with --[file_name_ends_with][new_line]. Then mark the end of the data with --[new_line].
 
@@ -61,5 +71,9 @@ In order to insert variables use $Variable_name. In order to add a space after v
 The Usage is `AddFile file_name ext1 ext2 ... [options]`. Eg.`AddFile Test .c .h .html .js`
 
 ### Options
-* -d => to create a directory with the same file_name and put the source file under it.
-* -v [Variable_Name] [Variable Value] => this just assigns or overwrites the variable given in the config.
+| Usage                                                                | Description                                                                     |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| AddFile file_name ext1 ext2 ...  -d                                  | to create a directory with the same file_name and put the source file under it. |
+| AddFile file_name ext1 ext2 ...  -v [Variable_Name] [Variable Value] | this just assigns or overwrites the variable given in the assigned config.      |
+| AddFile file_name ext1 ext2 ...  -c [config_path]                    | use this config just once                                                       |
+| AddFile -s [config_path]                                             | set this as default config path                                                 |
