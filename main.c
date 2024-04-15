@@ -191,7 +191,6 @@ int main(int argc, char **argv)
             char **temp = realloc(fltypes, sizeof(char *) * (count + 1));
             if (temp == NULL)
             {
-                free(fltypes);
                 free_var_val;
                 errorc("Memory error");
             }
@@ -245,7 +244,8 @@ int main(int argc, char **argv)
         time_t t = time(0);
         struct tm t2;
 
-        localtime_r(&t, &t2);
+        struct tm *t2p = localtime(&t);
+        t2 = *t2p;
 
         sprintf(temp, "%02d/%02d/%04d", t2.tm_mday, t2.tm_mon + 1, t2.tm_year + 1900);
         val = new_string_from_char(temp);
@@ -295,6 +295,9 @@ int main(int argc, char **argv)
     string file = new_string(), var = new_string();
     if (!file || !var)
         free_error("Memory error");
+
+    if (name == 0)
+        free_error("Name was not provided.");
 
     if (create_dir)
     {
@@ -786,7 +789,6 @@ void set_config(char *config_path2)
 
     // attempt to open the config file
     FILE *f;
-    memset(config_path2, 0, sizeof(config_path2));
     f = fopen(config_path, "w");
     if (f == NULL)
         error("Failed to open configuration file.");
@@ -874,7 +876,6 @@ FILE *get_config_file(char *filename)
         strncpy(config_path2, filename, FILENAME_MAX);
         if (access(config_path2, F_OK) != 0)
         {
-            fclose(f);
             remove(config_path);
             printf("%s\n", config_path2);
             error("The file does not exist.");
