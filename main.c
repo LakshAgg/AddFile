@@ -68,12 +68,19 @@ int assign_var(string var, string val, string **vrvl, int *varsp, int ignore_ove
 
 string get_val(string var, string *vrvl, int vars);
 
+void print_usage();
+
 int get_val_index(string var, string *vrvl, int vars);
 
 int main(int argc, char **argv)
 {
     if (argc < 2)
         error("Invalid Usage. Use -h for help.");
+    if (strcmp(argv[1], "-h") == 0)
+    {
+        print_usage();
+        exit(0);
+    }
     if (strcmp(argv[1], "-s") == 0)
     {
         char *new;
@@ -216,17 +223,48 @@ int main(int argc, char **argv)
         var = new_string_from_char("NAMECAP");
         if (!var || !val || !assign_var(var, val, &var_val, &vars, ow))
             free_error;
+
+        val = new_string_from_char(name);
+        for (int i = 0; val->s[i]; i++)
+        {
+            if (val->s[i] >= 'a' && val->s[i] <= 'z')
+                val->s[i] -= 'a' - 'A';
+            else if (val->s[i] == ' ')
+            {
+                memmove(val->s + i, val->s + i + 1, val->len - i);
+                val->len--;
+                i--;
+            }
+        }
+        var = new_string_from_char("NAMECAPNS");
+        if (!var || !val || !assign_var(var, val, &var_val, &vars, ow))
+            free_error;
+
         char temp[1024];
 
         time_t t = time(0);
         struct tm t2;
 
         localtime_r(&t, &t2);
-        sprintf(temp, "%02d%02d%04d", t2.tm_mday, t2.tm_mon, t2.tm_year + 1900);
+
+        sprintf(temp, "%02d/%02d/%04d", t2.tm_mday, t2.tm_mon + 1, t2.tm_year + 1900);
         val = new_string_from_char(temp);
-        var = new_string_from_char("DDMMYY");
+        var = new_string_from_char("DD/MM/YYYY");
         if (!var || !val || !assign_var(var, val, &var_val, &vars, ow))
             free_error;
+
+        sprintf(temp, "%02d/%02d/%04d", t2.tm_mon + 1, t2.tm_mday, t2.tm_year + 1900);
+        val = new_string_from_char(temp);
+        var = new_string_from_char("MM/DD/YY");
+        if (!var || !val || !assign_var(var, val, &var_val, &vars, ow))
+            free_error;
+
+        sprintf(temp, "%04d-%02d-%02d", t2.tm_year + 1900, t2.tm_mon + 1, t2.tm_mday);
+        val = new_string_from_char(temp);
+        var = new_string_from_char("YYYY-MM-DD");
+        if (!var || !val || !assign_var(var, val, &var_val, &vars, ow))
+            free_error;
+
         sprintf(temp, "%04d", t2.tm_year + 1900);
         val = new_string_from_char(temp);
         var = new_string_from_char("YEAR");
@@ -847,4 +885,16 @@ FILE *get_config_file(char *filename)
     if (f == NULL)
         error("Failed to open set config file.");
     return f;
+}
+
+void print_usage()
+{
+    printf(BOLDGREEN "Program" RESET "\n");
+    printf("`AddFile file_name ext1 ext2 ... [options] extn ...`. Eg.`AddFile Test .c .h -d\n\n");
+
+    printf(BOLDWHITE "Options" RESET "\n");
+    printf(BOLDWHITE "AddFile file_name ext1 ext2 ...  -d:" RESET "\n\t\tto create a directory with the same file_name and put the source file under it.\n\n");
+    printf(BOLDWHITE "AddFile file_name ext1 ext2 ...  -v [Variable_Name] [Variable Value]:" RESET "\n\t\tthis just assigns or overwrites the variable given in the assigned config.\n\n");
+    printf(BOLDWHITE "AddFile file_name ext1 ext2 ...  -c [config_path]" RESET "\n\t\tuse this config just once.\n\n");
+    printf(BOLDWHITE "AddFile -s [config_path]" RESET "\n\t\tset this as default config path.\n\n");
 }

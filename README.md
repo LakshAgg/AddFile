@@ -5,7 +5,7 @@ Just a simple and stupid program to create source files with some prefilled data
 The configuration can be stored anywhere u like. On running the program for the first time it will ask for the path to the config file.
 
 ### Config File
-The file follows a really simple syntax.
+The file follows a really simple syntax. An example is available in the file example.config
 ```
 Variables and Comments
 
@@ -55,12 +55,15 @@ Yay a comment
 ##### Preassigned Variables
 These can be overwritten either in config or by -v.
 
-| Name    | Value                     |
-| ------- | ------------------------- |
-| NAME    | the name of file          |
-| NAMECAP | the name of file all caps |
-| DDMMYY  | the creation date         |
-| YEAR    | the current year          |
+| Name       | Value                                        |
+| ---------- | -------------------------------------------- |
+| NAME       | the name of file                             |
+| NAMECAP    | the name of file all caps                    |
+| NAMECAPNS  | the name of file all caps without any spaces |
+| DD/MM/YYYY | the creation date                            |
+| MM/DD/YYYY | the creation date                            |
+| YYYY-MM-DD | the creation date                            |
+| YEAR       | the current year                             |
 
 #### File Contents
 Data for each file extension is started with --[file_name_ends_with][new_line]. Then mark the end of the data with --[new_line].
