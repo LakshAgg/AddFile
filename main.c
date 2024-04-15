@@ -181,6 +181,11 @@ int main(int argc, char **argv)
                 i += 2;
             }
         }
+        else if (strcmp(argv[i], "-c") == 0)
+        {
+            i++;
+            continue;
+        }
         else if (name == NULL)
             name = argv[i];
         else
