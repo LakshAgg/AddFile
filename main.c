@@ -15,15 +15,12 @@
 #include <sys/types.h>
 #include "Helper.h"
 
-#ifdef linux
-#define PATH_SEPARATOR "/"
-#define PATH_SEPARATORC '/'
-#elif __APPLE__
-#define PATH_SEPARATOR "/"
-#define PATH_SEPARATORC '/'
-#else
+#if defined(_WIN32) || defined(_WIN64)
 #define PATH_SEPARATOR "\\"
 #define PATH_SEPARATORC '\\'
+#else
+#define PATH_SEPARATOR "/"
+#define PATH_SEPARATORC '/'
 #endif
 
 #define CONFIG_FILE ".addfile.config"
@@ -791,7 +788,7 @@ void set_config(char *config_path2)
     FILE *f;
     f = fopen(config_path, "w");
     if (f == NULL)
-        error("Failed to open configuration file.");
+        error("Failed to open main configuration file.");
 
     if (access(config_path2, F_OK) != 0)
     {
@@ -837,7 +834,7 @@ FILE *get_config_file(char *filename)
             f = fopen(config_path, "r");
 
             if (f == NULL)
-                error("Failed to open configuration file.");
+                error("Failed to open main configuration file.");
             // Read the config path
             fread(config_path2, sizeof(char), sizeof(config_path2), f);
 
@@ -852,7 +849,7 @@ FILE *get_config_file(char *filename)
         {
             f = fopen(config_path, "w");
             if (f == NULL)
-                error("Failed to open configuration file.");
+                error("Failed to open main configuration file.");
 
             printf(BOLDGREEN "Please enter the path to the configuration file: " RESET);
             fgets(config_path2, FILENAME_MAX, stdin);
