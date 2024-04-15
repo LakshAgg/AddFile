@@ -659,6 +659,7 @@ string *get_fe_tc(FILE *f, int *count, string *var_val, int vars, int ow, void *
                                 val->s[val->len] = 0;
                                 empty_s(temp);
                                 sub_line = 0;
+                                skip = 1;
                                 continue;
                             }
                         }
