@@ -426,7 +426,7 @@ string *get_fe_tc(FILE *f, int *count, string *var_val, int vars, int ow, void *
     int read;
     while ((read = fread(buff, sizeof(char), CHUNK_SIZE, f)) != 0)
     {
-        char new_line = 1, skip = 0, dash = 0, escape = 0, read_v = 0;
+        char new_line = 1, skip = 0, dash = 0, escape = 0, read_v = 0, sub_line = 0;
         for (int i = 0; i < read; i++)
         {
             char c = buff[i];
@@ -636,23 +636,45 @@ string *get_fe_tc(FILE *f, int *count, string *var_val, int vars, int ow, void *
                 {
                     if (c == '\n')
                         new_line = 1;
-
+                    else if (c == '-' && temp->len == 0)
+                    {
+                        sub_line = 1;
+                        continue;
+                    }
                     if (c == ' ' || c == '\n')
                     {
                         read_v = 0;
+
                         string value = get_val(temp, var_val, vars);
 
-                        if (!value)
+                        if (sub_line)
+                        {
+                            if (value)
+                                trim(value);
+                            if (!value || value->len == 0)
+                            {
+                                for (; val->s[val->len - 1] != '\n'; val->len--)
+                                    if (val->len == 0)
+                                        break;
+                                val->s[val->len] = 0;
+                                empty_s(temp);
+                                sub_line = 0;
+                                continue;
+                            }
+                        }
+                        else if (!value)
                         {
                             printf(BOLDRED "Variable \"%s\" has not been assigned\n" RESET, temp->s);
                             errorfree("Variable error");
                         }
+
                         if (!string_append(&val, value))
                             merrorfree();
 
                         if (c == '\n' && !append_char(&val, c))
                             merrorfree();
                         empty_s(temp);
+                        sub_line = 0;
                     }
                     else if (!append_char(&temp, c))
                         merrorfree();

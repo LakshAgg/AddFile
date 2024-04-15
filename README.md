@@ -73,6 +73,20 @@ Data for each file extension is started with --[file_name_ends_with][new_line]. 
 
 In order to insert variables use $Variable_name. In order to add a space after variable use double spaces. In order to use -- or $ in the content, escape them. Eg. `\--` and `\$`;
 
+If you want to remove the entire line where the variable is not defined or empty after trimming, use $-VariableName;
+Eg. 
+```
+EmptyVar=
+
+--.c
+The value of EmptyVar is $EmptyVar                <-- This will not result in an error
+The value of NotDefinedVar is $NotDefinedVar      <-- This will result in an error
+
+The value of EmptyVar is $-EmptyVar                     <-- The entire line will be removed
+The value of NotDefinedVar is $-NotDefinedVar           <-- The entire line will be removed
+--
+```
+
 ## Program
 The Usage is `AddFile file_name ext1 ext2 ... [options]`. Eg.`AddFile Test .c .h .html .js`
 
