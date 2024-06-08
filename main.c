@@ -359,8 +359,8 @@ string *get_fe_tc(FILE *f, int *count, string *var_val, int vars, int ow, void *
 
 #define merrorfree() errorfree("Memory error");
 
-    string var, val, temp;
-    string *fl_ct;
+    string var = NULL, val = NULL, temp = NULL;
+    string *fl_ct = NULL;
     int fls = 0;
     int ignore_overwrite = ow;
 
